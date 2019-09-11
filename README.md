@@ -1,2 +1,15 @@
 # Process_Migration
-Script to check of a Process or Thread with &lt;PID> Migrates between Cores 
+
+### Setting up Top
+* Run ``` top ```
+* Press f to Edit the columns shown by Top
+* Select Column P and Quit
+* After returning to the "Top Screen", Hit Shift + w" to save these columns as Defualt in "~/.toprc"
+* ``` chmod a+x ThreadMigration.sh ```
+* Set Up Complete
+
+
+### Usage
+
+./ThreadMigration.sh <PID> <Number of Iterations of Top>
+
