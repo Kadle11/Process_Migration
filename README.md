@@ -11,5 +11,5 @@
 
 ### Usage
 
-./ThreadMigration.sh &lt;PID> <&lt;Number of Iterations of Top>
+./ThreadMigration.sh &lt;PID> &lt;Number of Iterations of Top>
 
