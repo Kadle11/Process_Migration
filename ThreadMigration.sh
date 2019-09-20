@@ -8,9 +8,6 @@
 
 # Usage : ./ThreadMigration.sh <PID> <No of Iterations of Top>
 
-declare -a CPU_Array
-declare -A CPU_Time
-declare -a CPU_Time_Data
 declare -a Threads
 
 ps -e -T | grep "$1" > allThreads.txt
@@ -23,6 +20,9 @@ done < "allThreads.txt"
 
 for PID in "${Threads[@]}"
 do
+    declare -a CPU_Array
+    declare -A CPU_Time
+    declare -a CPU_Time_Data
     
     if [ -z "$2" ];
     then
@@ -55,5 +55,11 @@ do
     else
 	echo "Process $PID Migrates"
     fi
+
+    unset CPU_Time_Data
+    unset CPU_Time
+    unset CPU_Array
 done
 
+rm "TMig.txt"
+rm "allThreads.txt"
