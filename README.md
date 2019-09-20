@@ -13,3 +13,8 @@
 
 ```./ThreadMigration.sh <PID> <Number of Iterations of Top>```
 
+### Description
+
+Given a Process, This script gives the following details
+* Number of Threads of the Process
+* The PIDs of the Threads that Migrate and that of Threads that do not Migrate 
