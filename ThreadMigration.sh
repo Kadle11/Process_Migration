@@ -13,6 +13,13 @@ declare -a Threads
 ps -e -T | grep "$1" > allThreads.txt
 echo "Number of Threads: $(($(cat allThreads.txt|wc -l)))"
 
+if [ -z "$2" ];
+then
+    top -H -bn 5 -p "$1" > TopData.txt
+else
+    top -H -bn "$2" -p "$1" > TopData.txt
+fi
+
 while read LINE; do
     T=$(echo ${LINE} | cut -d" " -f2)
     Threads+=( $T )
@@ -23,13 +30,8 @@ do
     declare -a CPU_Array
     declare -A CPU_Time
     declare -a CPU_Time_Data
-    
-    if [ -z "$2" ];
-    then
-	top -H -bn 5 | grep "$1" > TMig.txt
-    else
-	top -H -bn "$2" | grep "$1" > TMig.txt
-    fi
+
+    cat TopData.txt | grep "$PID" > TMig.txt
 
 
     while read CMD; do
@@ -63,3 +65,4 @@ done
 
 rm "TMig.txt"
 rm "allThreads.txt"
+rm "TopData.txt"
