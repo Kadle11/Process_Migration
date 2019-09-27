@@ -27,42 +27,46 @@ done < "allThreads.txt"
 
 for PID in "${Threads[@]}"
 do
-    declare -a CPU_Array
-    declare -A CPU_Time
-    declare -a CPU_Time_Data
+    SleepFlag=1
 
     cat TopData.txt | grep "$PID" > TMig.txt
 
 
+    declare -a CPU_Arr
+
     while read CMD; do
 	CPU=$(echo $CMD | tr ' ' '\n' | tail -1)
-	Time=$(echo ${CMD} | cut -d" " -f11) 
+	Sleep=$(echo ${CMD} | cut -d" " -f8)
+	if [ "$Sleep" == "R" ] && [ $SleepFlag -eq 1 ]
+	then
+	    SleepFlag=0
+	fi
 	CPU_Arr+=( $CPU )
-	CPU_Time_Data+=( $Time )
     done < "TMig.txt"
 
-    #for i in "${CPU_Arr[@]}"; do echo "$i"; done
-
-    len=${#CPU_Time_Data[@]}
-
-    for i in $(seq 1 $(($len-1)))
-    do
-	continue;
-    done
+    echo "${CPU_Arr[*]}"
 
     if [ "${#CPU_Arr[@]}" -gt 0 ] && [ $(printf "%s\000" "${CPU_Arr[@]}" | 
 						LC_ALL=C sort -z -u |
 						grep -z -c .) -eq 1 ] ; then
-	echo "Process $PID does not Migrate"
+	if [ $SleepFlag -eq 1 ]
+	then
+	    echo "Process $PID is Sleeping and does not Migrate"
+	else
+	    echo "Process $PID is Active and does not Migrate"
+	fi
     else
-	echo "Process $PID Migrates"
+	if [ $SleepFlag -eq 1 ]
+	then
+	    echo "Process $PID is Sleeping and Migrates"
+	else
+	    echo "Process $PID is Active and Migrates"
+	fi
     fi
 
-    unset CPU_Time_Data
-    unset CPU_Time
-    unset CPU_Array
+    unset CPU_Arr
 done
 
-rm "TMig.txt"
+#rm "TMig.txt"
 rm "allThreads.txt"
-rm "TopData.txt"
+#rm "TopData.txt"
